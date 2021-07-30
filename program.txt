@@ -1,0 +1,38 @@
+#print(["a",1])
+
+if True:
+    print("Expression1 is true")
+    
+    if True:
+        print( "Expression2 is true"    )
+        if True:
+            print("Expression3 is true")
+            
+            if True:
+                n=100
+                print(      "Expression4 is true" )
+                n+=1
+                if n==100+1:
+                    print("Expression5 is true")
+                    print("n=",end="")
+                    print(n, end="\n\n")        
+                     
+    print("Done with if test")
+
+
+x=1
+while x<=10:
+    print("x = ",end="")
+    print(x)
+    x+=1
+ 
+
+print("Done with while loop test")
+
+
+function func(parameter , newparam="default param"):
+    print(parameter)
+    print(newparam) 
+    
+func("xy z", 123)
+func(newparam="xyz", parameter=123)
