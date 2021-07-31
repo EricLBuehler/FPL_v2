@@ -1,4 +1,4 @@
-#print(["a",1])
+print(["""a""",1],end=[""])
 
 if True:
     print("Expression1 is true")
@@ -30,7 +30,7 @@ while x<=10:
 print("Done with while loop test")
 
 
-function func(parameter , newparam="default param"):
+def func(parameter , newparam="default param"):
     print(parameter)
     print(newparam) 
     

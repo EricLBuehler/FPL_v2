@@ -8,6 +8,8 @@ Created on Mon May 31 16:00:22 2021
 import fpl_lib
 import fpl_loader
 import time
+import os
+import sys
 
 class fpl_env:
     def __init__(self):
@@ -304,6 +306,136 @@ def fpl_exec_tokenized(tokens, tabs, commands, evalfpl):
         else:    
             command_=commands[0] 
             
+            
+            quotestack_=[]
+            bracketstack_=[]
+            cbracketstack_=[]
+            parameters=[]
+            
+            
+            #Get quotes
+            i=0
+            for token in line:
+                if isinstance(token, fpl_lib.commandtoken):
+                    continue
+                
+                if token.token == "\"":
+                    quotestack_.append(i)
+                    
+                i+=1
+            
+            if not len(quotestack_)%2==0:
+                raise SyntaxError("All \" characters must have respective reciprocals.")
+             
+            print(quotestack_) #todo make sure that correct pairs of special chars are connected
+            
+            quotestack=[[] for _ in range(int(len(quotestack_)/2))]
+            
+            i=0
+            for n in range(int(len(quotestack_)/2)):
+                quotestack[i].append(quotestack_[n])
+                i+=1
+
+                
+            i=0
+            for n in range(len(quotestack_)-1,int(len(quotestack_)/2)-1,-1):
+                quotestack[i].append(quotestack_[n])
+                i+=1
+                
+                
+            
+            
+                    
+            #Get brackets
+            i=0
+            for token in line:
+                if isinstance(token, fpl_lib.commandtoken):
+                    continue
+                
+                if token.token == "[":
+                    bracketstack_.append([i,"o"])
+                if token.token == "]":
+                    bracketstack_.append([i,"c"])
+                    
+                i+=1
+            
+            if not len(bracketstack_)%2==0:
+                raise SyntaxError("All [ or ] characters must have respective reciprocals.")
+             
+
+            bracketstack=[[] for _ in range(int(len(bracketstack_)/2))]
+            
+            i=0
+            for n in range(int(len(bracketstack_)/2)):
+                bracketstack[i].append(bracketstack_[n])
+                i+=1
+
+                
+            i=0
+            for n in range(len(bracketstack_)-1,int(len(bracketstack_)/2)-1,-1):
+                bracketstack[i].append(bracketstack_[n])
+                i+=1
+                
+            #Get curly brackets    
+            i=0
+            for token in line:
+                if isinstance(token, fpl_lib.commandtoken):
+                    continue
+                
+                if token.token == "{":
+                    cbracketstack_.append(i,"o")
+                if token.token == "}":
+                    cbracketstack_.append(i,"c")
+                    
+                i+=1
+            
+            if not len(cbracketstack_)%2==0:
+                raise SyntaxError("All [ or ] characters must have respective reciprocals.")
+             
+
+            cbracketstack=[[] for _ in range(int(len(cbracketstack_)/2))]
+            
+            i=0
+            for n in range(int(len(cbracketstack_)/2)):
+                cbracketstack[i].append(cbracketstack_[n])
+                i+=1
+
+                
+            i=0
+            for n in range(len(cbracketstack_)-1,int(len(cbracketstack_)/2)-1,-1):
+                cbracketstack[i].append(cbracketstack_[n])
+                i+=1
+                
+                
+            #Get parameters
+            parameters=[]
+            i=0
+            for token in line:
+                if isinstance(token, fpl_lib.commandtoken):
+                    continue
+                
+            
+                
+
+                i+=1
+
+            print(quotestack)
+                
+            print(bracketstack)
+            
+            print(cbracketstack)
+            
+            finalstack=quotestack+bracketstack+cbracketstack
+            
+            maxfinalstack=max([finalstack[n][1] for n in range(len(finalstack))])
+            
+            finalstack_index=[n for n in range(len(finalstack))  if finalstack[n][1]==maxfinalstack][0]
+            
+            print(finalstack[finalstack_index])
+            
+            sys.exit()
+            
+            """
             #special=[]
             quotes=[]
             
@@ -314,20 +446,7 @@ def fpl_exec_tokenized(tokens, tabs, commands, evalfpl):
                     quotes.append(index)
                     
                 index+=1
-             
-            """
-            #Get brackets
-            index=0
-            for token in line:
-                if isinstance(token, fpl_lib.openbrackettoken) or isinstance(token, fpl_lib.closebrackettoken):
-                    special.append(index)
-                    
-                index+=1
-                
-            special=sorted(special)
-            """
 
-            #Get parameters
             commas=[]
             index=0
             z=0
@@ -374,7 +493,8 @@ def fpl_exec_tokenized(tokens, tabs, commands, evalfpl):
 
             #for parameter in parameters:
             #    print(parameter, end="\n\n")
-                
+            """   
+            
         
 
             if command_=="print":
@@ -604,7 +724,7 @@ def fpl_exec_tokenized(tokens, tabs, commands, evalfpl):
                     
                     
                     
-            if command_=="function":
+            if command_=="def":
                 funcname_full=""
                 
                 for n in range(len(parameters)):
@@ -828,7 +948,7 @@ def fpl_exec_raw(program, commands):
 
     
 
-commands=["print","if","while","function"]
+commands=["print","if","while","def"]
         
 
 if __name__=="__main__":
